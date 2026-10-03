@@ -9,7 +9,7 @@ The slides accompany two other repositories:
 
 [jgaltidor/twelf_slides](https://github.com/jgaltidor/twelf_slides) holds the companion slides on Twelf.
 
-**Status:** these slides date from 2013 and predate later corrections to the paper. Where they differ, the paper is authoritative.
+**Status:** these slides date from 2013 and were corrected in October 2026 to match the paper. Where they differ, the paper is authoritative.
 
 ## Building
 

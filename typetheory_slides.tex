@@ -48,7 +48,7 @@
   \end{itemize}
 \item Twelf Tutorial
 	\begin{itemize}
-	\item Mechanization of $Minilang$
+	\item Mechanization of $MiniLang$
 	\end{itemize}
 \end{itemize}
 \end{frame}
@@ -154,8 +154,8 @@
 \code{\^{}(str[john]; \^{}(x; str[doe]))} & \code{'john' \^{} x \^{} 'doe'} \\
 \\
 
-\code{let(hours; num[24];}    & \code{let hours be 24 in hours+24} \\
-\code{  +(hours; num[3])}     & \\
+\code{let(hours; num[24];}    & \code{let hours be 24 in hours+33} \\
+\code{  +(hours; num[33]))}   & \\
 
 \end{tabular}
 \end{center}
@@ -211,7 +211,7 @@
 \begin{frame}{Example Type Derivation}
 \begin{scriptsize}
 \[
-\ttinfer[T.6]{$\vdash$ let(hrs; num[24]; +(hrs; num[3]): num}
+\ttinfer[T.6]{$\vdash$ let(hrs; num[24]; +(hrs; num[3])): num}
   {\ttinfer[T.1]{$\vdash$ num[24]: num}{ }
    &
    \ttinfer[T.4]{hrs:num $\vdash$ +(hrs; num[3]): num}
@@ -228,11 +228,11 @@
 \begin{frame}{Example Type Check Failure}
 \begin{scriptsize}
 \[
-\ttinfer{$\vdash$ let(hrs; num[24]; +(hrs; str[abc])}
+\ttinfer{$\vdash$ let(hrs; num[24]; +(hrs; str[abc]))}
   {\ttinfer[T.1]{$\vdash$ num[24]: num}{ }
    &
-   \ttinfer{hrs:num $\vdash$ +(hours; str[abc]): $Fail$}
-     {\ttinfer[T.3]{hrs:num $\vdash$ hours: num}{ }
+   \ttinfer{hrs:num $\vdash$ +(hrs; str[abc]): $Fail$}
+     {\ttinfer[T.3]{hrs:num $\vdash$ hrs: num}{ }
       &
       \ttinfer[T.1]{hrs:num $\vdash$ str[abc]: str}{ }
      }
@@ -310,7 +310,7 @@ its type.
 \pause
 \item Relates the compile-time analysis (type checking rules)
 with the run-time behavior (evaluation rules).
-\item Important property for real programming langauges.
+\item Important property for real programming languages.
 \end{itemize}
 \end{frame}
 
@@ -362,7 +362,7 @@ Case: (\texttt{T.4}, \texttt{D.1})
 
 We assume preservation holds for subexpressions.
 Hence, by the \emph{inductive hypothesis},
-\texttt{$e_1$: num} and $e_1 \stepto e'_1$ implies
+\texttt{$e_1$: num} and $e_1 \stepto e'_1$ imply
 \texttt{$e'_1$: num}.
 Rule \texttt{T.4} gives us:
 
@@ -457,15 +457,15 @@ We have completed the proof of preservation!
 \begin{itemize}
 \item Preservation + Progress = Type Safety
   \begin{itemize}
-  \item Progress theorem and proof presented in them paper.
+  \item Progress theorem and proof presented in the paper.
   \end{itemize}
 
 \pause
-\item Type safety ensure program behavior is well-defined
+\item Type safety ensures program behavior is well-defined
 throughout its execution.
 
 \pause
-\item Proving language properties are important
+\item Proving language properties is important
 (e.g. ruling out certain errors, publishing).
 
 \pause
