@@ -1,0 +1,499 @@
+\documentclass{beamer}
+% Make sure to run this file with PDFLatex.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Do not change the next few lines
+\usepackage{beamerthemesplit}
+\usepackage[english]{babel}
+
+% Stop TOC from appearing at top of every slide
+\setbeamertemplate{headline}{}
+
+% Make item symbol square
+\setbeamertemplate{itemize item}[square]
+
+% Input my macros
+\input{mymacros.tex}
+
+\renewcommand{\emph}[1]{\textbf{\textit{#1}}}
+
+% Now Start entering your information.
+%\title{Taming the Wildcards: \\
+% Combining Definition- and Use-Site Variance}
+% \title{Taming the Wildcards}
+
+\title[Type Theory Tutorial\hspace{2em}\insertframenumber/
+\inserttotalframenumber]{Type Theory Tutorial}
+
+\author[John Altidor]{\textbf{John Altidor}}
+\date{}
+\institute{Logic Seminar Lecture}
+
+\begin{document}
+\frame{\titlepage}
+
+\section{Introduction}
+
+\begin{frame}{Outline}
+\begin{itemize}
+\item Brief Motivation for Type Systems.
+
+\item Example Type System/Programming Language (PL).
+  \begin{itemize}
+	\item Presenting $MiniLang$:
+	A simple programming language of numbers and strings.
+	\item Syntax
+	\item Static Semantics (Type Checking)
+	\item Dynamic (Operational) Semantics (Evaluation)
+	\item Safety Theorems: Preservation + Progress
+  \end{itemize}
+\item Twelf Tutorial
+	\begin{itemize}
+	\item Mechanization of $Minilang$
+	\end{itemize}
+\end{itemize}
+\end{frame}
+
+\section{Motivation}
+
+\begin{frame}{Create Language vs Create Library}
+\begin{itemize}
+\pause
+\item Library Pros:
+	\begin{itemize}
+	\item Library allows using existing language \emph{infrastructure}
+
+\pause
+	\item Smaller learning curve \\
+	- Don't need to learn new language constructs.
+	\end{itemize}
+
+\pause
+\item Library Cons:
+  \begin{itemize}
+  \item Errors difficult to \emph{detect and debug} w/o a compiler.
+		\begin{itemize}
+		\item Programs can enter undefined states \\
+		(e.g. segmentation fault from reading a non-existing field).
+		\end{itemize}
+
+\pause
+	\item Requirements \emph{not checked} in the language of the library.
+		\begin{itemize}
+		\item Leaking confidential information to unauthorized users.
+		\end{itemize}
+  \end{itemize}
+\end{itemize}
+\end{frame}
+
+\section{Type Systems}
+
+\begin{frame}{Type Systems}
+
+\begin{itemize}
+\item Type System =
+\emph{Formally defined} language (calculus) with \emph{types}.
+
+\item
+\emph{Types} = Properties/classification over terms (syntax) of a language.
+
+\pause
+\item Precisely defining what a language means
+  \begin{itemize}
+  \item Which programs are allowed in a language?
+  \item How does a program execute?
+  \item \ldots
+  \end{itemize}
+
+\pause  
+\item Enables \emph{proving properties} about a language.
+  \begin{itemize}
+  \item Program is always in a well-defined state throughout
+  execution (no segmentation fault).
+  \item Can prove properties related to software requirements
+  (e.g. information flow).
+  \end{itemize}
+
+\pause
+\item Compiler \emph{informs} programmers of errors at compile-time.
+
+\pause
+\item Best explained with an example: \emph{MiniLang}
+\end{itemize}
+\end{frame}
+
+
+\section{Syntax}
+
+\begin{frame}{MiniLang Syntax}
+\begin{itemize}
+\item \emph{Concrete syntax} is what humans write.
+\item \emph{Abstract syntax} is what computers reason over.
+\end{itemize}
+
+\[
+\begin{array}{llrl@{\hspace{0.5cm}}l}
+\mathit{Category}   & \mathit{Item}   & & \mathit{Abstract} & \mathit{Concrete} \\ \\
+\mathit{Expression} & e & \bnfdef & x                              & x \\
+                    &   & \bnfalt & \code{num[$n$]}                & n \\
+                    &   & \bnfalt & \code{str[$s$]}                & \code{'$s$'} \\
+                    &   & \bnfalt & \code{+($e_1$; $e_2$)}         & \code{$e_1$ + $e_2$} \\
+                    &   & \bnfalt & \code{\^{}($e_1$; $e_2$)}      & \code{$e_1$ \^{} $e_2$} \\
+                    &   & \bnfalt & \code{let($x$; $e_1$; $e_2$)}  & \code{let $x$ be $e_1$ in $e_2$}
+\end{array}
+\]
+\end{frame}
+
+
+\begin{frame}{Example Expressions}
+\begin{center}
+\begin{tabular}{l|l}
+\textit{Abstract} & \textit{Concrete} \\ \hline
+\code{+(num[5]; +(num[4]; num[3]))}   & \code{5 + 4 + 3} \\
+\\
+
+\code{\^{}(str[john]; \^{}(x; str[doe]))} & \code{'john' \^{} x \^{} 'doe'} \\
+\\
+
+\code{let(hours; num[24];}    & \code{let hours be 24 in hours+24} \\
+\code{  +(hours; num[3])}     & \\
+
+\end{tabular}
+\end{center}
+\end{frame}
+
+\section{Inference Rules}
+
+\begin{frame}{Inference Rules}
+\begin{itemize}
+\item Semantics of terms (ASTs) defined w/ inference rules.
+\item Rules have the following form.
+\end{itemize}
+
+\[
+\infer[Rule Label]{\underbrace{J}_{conclusion}}
+      {\overbrace{J_1 \quad J_2 \quad \ldots \quad J_n}^{premises}}
+\]
+
+\begin{itemize}
+\item No premises means axiom.
+\end{itemize}
+\end{frame}
+
+\section{Type Checking}
+
+\begin{frame}{Static Semantics (Type Checking Rules)}
+\[
+\cinfer[T.1]{$\Gamma \vdash$ num[$n$]: num}{ }
+\qquad
+\cinfer[T.2]{$\Gamma \vdash$ str[$s$]: str}{ }
+\qquad
+\infer[T.3]{\Gamma \vdash x: \tau}{(x, \tau) \in \Gamma}
+\]
+
+\[
+\cinfer[T.4]{$\Gamma \vdash$ +($e_1$; $e_2$): num}
+  {\code{$\Gamma \vdash e_1$: num} & \code{$\Gamma \vdash e_2$: num}}
+\qquad
+\cinfer[T.5]{$\Gamma \vdash$ \^{}($e_1$; $e_2$): str}
+  {\code{$\Gamma \vdash e_1$: str} & \code{$\Gamma \vdash e_2$: str}}
+\]
+
+\[
+\cinfer[T.6]{$\Gamma \vdash$ let($x$; $e_1$; $e_2$): $\tau_2$}
+  {\Gamma \vdash e_1: \tau_1
+   &
+   \Gamma , x : \tau_1 \vdash e_2 : \tau_2
+  }
+\]
+\end{frame}
+
+
+\begin{frame}{Example Type Derivation}
+\begin{scriptsize}
+\[
+\ttinfer[T.6]{$\vdash$ let(hrs; num[24]; +(hrs; num[3]): num}
+  {\ttinfer[T.1]{$\vdash$ num[24]: num}{ }
+   &
+   \ttinfer[T.4]{hrs:num $\vdash$ +(hrs; num[3]): num}
+     {\ttinfer[T.3]{hrs:num $\vdash$ hrs: num}{ }
+      &
+      \ttinfer[T.1]{hrs:num $\vdash$ num[3]: num}{ }
+     }
+  }
+\]
+\end{scriptsize}
+\end{frame}
+
+
+\begin{frame}{Example Type Check Failure}
+\begin{scriptsize}
+\[
+\ttinfer{$\vdash$ let(hrs; num[24]; +(hrs; str[abc])}
+  {\ttinfer[T.1]{$\vdash$ num[24]: num}{ }
+   &
+   \ttinfer{hrs:num $\vdash$ +(hours; str[abc]): $Fail$}
+     {\ttinfer[T.3]{hrs:num $\vdash$ hours: num}{ }
+      &
+      \ttinfer[T.1]{hrs:num $\vdash$ str[abc]: str}{ }
+     }
+  }
+\]
+\end{scriptsize}
+\end{frame}
+
+
+\section{Evaluation}
+
+\begin{frame}{Dynamic (Operational) Semantics (Evaluation)}
+\begin{itemize}
+\item Defining how to ``execute'' expressions in $MiniLang$.
+\item Specifically, defining a \emph{transition system}/relation
+$\stepto$ \\
+between expressions to evaluate them to \emph{values}.
+\item First, need to define values:
+\end{itemize}
+\[
+\cinfer{num[$n$] value}{ }
+\qquad
+\cinfer{str[$s$] value}{ }
+\]
+\end{frame}
+
+
+\begin{frame}{Dynamic Semantics -- Numerical Addition}
+\[
+\cinfer[D.1]{+($e_1$; $e_2$) $\stepto$ +($e'_1$; $e_2$)}{e_1 \stepto e'_1}
+\]
+
+\[
+\cinfer[D.2]{+(num[$n_1$]; $e_2$) $\stepto$ +(num[$n_1$]; $e'_2$)}{e_2 \stepto e'_2}
+\]
+
+\[
+\cinfer[D.3]{+(num[$n_1$]; num[$n_2$]) $\stepto$ num[$n_3$]}{n_1 + n_2 = n_3}
+\]
+\end{frame}
+
+\begin{frame}{Dynamic Semantics -- String Concatenation}
+\[
+\cinfer[D.4]{\^{}($e_1$; $e_2$) $\stepto$ \^{}($e'_1$; $e_2$)}{e_1 \stepto e'_1}
+\]
+
+\[
+\cinfer[D.5]{\^{}(str[$s_1$]; $e_2$) $\stepto$ \^{}(str[$s_1$]; $e'_2$)}{e_2 \stepto e'_2}
+\]
+
+\[
+\cinfer[D.6]{\^{}(str[$s_1$]; str[$s_2$]) $\stepto$ str[$s_3$]}{s_1 \code{\^{}} s_2 = s_3}
+\]
+\end{frame}
+
+\begin{frame}{Dynamic Semantics -- Let Expressions}
+\[
+\cinfer[D.7]{let($x$; $e_1$; $e_2$) $\stepto$ let($x$; $e'_1$; $e_2$)}{e_1 \stepto e'_1}
+\]
+
+\[
+\cinfer[D.8]{let($x$; $e_1$; $e_2$) $\stepto$ \cemph{$[e_1 / x]e_2$}}{e_1 \; \code{value}}
+\]
+\end{frame}
+
+\section{Preservation Theorem}
+
+\begin{frame}{Safety Theorem -- Preservation}
+\begin{itemize}
+\item If $e$ is a well-typed expression that is not a value,
+then performing an evaluation step on $e$ does not change
+its type.
+\item Formally, if $e : \tau$ and $e \stepto e'$, then $e' : \tau$.
+
+\pause
+\item Relates the compile-time analysis (type checking rules)
+with the run-time behavior (evaluation rules).
+\item Important property for real programming langauges.
+\end{itemize}
+\end{frame}
+
+\section{Preservation Motivation}
+
+\begin{frame}[containsverbatim]{Preservation Motivation}
+What if Java did not preserve types during evaluation?
+\begin{verbatim}
+int x;    // 4 bytes in Java
+double y; // 8 bytes in Java
+\end{verbatim}
+\texttt{x = }$\underbrace{\texttt{x + 8}}_{\text{What if
+this evaluated to a double?}}$
+\end{frame}
+
+\section{Preservation Proof}
+
+\begin{frame}{Preservation Proof -- Addition Case 1}
+Proof by induction on the \emph{possible} typing and
+evaluation combinations.
+
+Case: (\texttt{T.4}, \texttt{D.3})
+\[
+\cinfer[T.4]{+(num[$n_1$]; num[$n_2$]): num}
+  {\code{num[$n_1$]: num} & \code{num[$n_2$]: num}}
+\]
+
+\[
+\cinfer[D.3]{+(num[$n_1$]; num[$n_2$]) $\stepto$ num[$n_3$]}{n_1 + n_2 = n_3}
+\]
+
+Using rule \texttt{T.1}:
+
+\[
+\cinfer[T.1]{num[$n_3$]: num}{ }
+\qed
+\]
+\end{frame}
+
+
+\begin{frame}{Preservation Proof -- Addition Case 2}
+Case: (\texttt{T.4}, \texttt{D.1})
+\[
+\cinfer[T.4]{+($e_1$; $e_2$): num}
+  {\code{$e_1$: num} & \code{$e_2$: num}}
+\qquad
+\cinfer[D.1]{+($e_1$; $e_2$) $\stepto$ +($e'_1$; $e_2$)}{e_1 \stepto e'_1}
+\]
+
+We assume preservation holds for subexpressions.
+Hence, by the \emph{inductive hypothesis},
+\texttt{$e_1$: num} and $e_1 \stepto e'_1$ implies
+\texttt{$e'_1$: num}.
+Rule \texttt{T.4} gives us:
+
+\[
+\cinfer[T.4]{+($e'_1$; $e_2$): num}
+  {\code{$e'_1$: num} & \code{$e_2$: num}}
+\qed
+\]
+\end{frame}
+
+
+\begin{frame}{Preservation Proof -- Addition Case 3}
+
+Case: (\texttt{T.4}, \texttt{D.2})
+\[
+\cinfer[T.4]{+(num[$n_1$]; $e_2$): num}
+  {\code{num[$n_1$]: num} & \code{$e_2$: num}}
+\]
+\[
+\cinfer[D.2]{+(num[$n_1$]; $e_2$) $\stepto$ +(num[$n_1$]; $e'_2$)}{e_2 \stepto e'_2}
+\]
+
+Since \texttt{$e_2$: num} and $e_2 \stepto e'_2$,
+by the inductive hypothesis, \texttt{$e'_2$: num}.
+
+Rule \texttt{T.4} gives us:
+\[
+\cinfer[T.4]{+(num[$n_1$]; $e'_2$): num}
+  {\cinfer[T.1]{num[$n_1$]: num}{ }
+   &
+   \code{$e'_2$: num}}
+\qed
+\]
+\end{frame}
+
+
+\begin{frame}{Preservation Proof -- Remaining Cases}
+\begin{itemize}
+\item Remaining cases in preservation proof apply similar reasoning.
+\item We show one more case involving a common lemma.
+\end{itemize}
+\end{frame}
+
+\section{Substitution}
+
+\begin{frame}{Substitution Lemma}
+\begin{itemize}
+\item
+For a case in the preservation proof, we need the
+\emph{Substitution Lemma}:
+
+\item
+In words, we can substitute subexpressions that are of the
+same type in an expression $e$ without changing the type of $e$.
+
+\pause
+\item
+Formally: \\
+If $\Gamma \vdash e' : \tau'$ and $\Gamma, y : \tau' \vdash e : \tau$,
+then $\Gamma \vdash [e' / y]e : \tau$.
+
+\item
+Proof of this lemma by induction on the structure of $e$.
+\end{itemize}
+\end{frame}
+
+
+\begin{frame}{Preservation Proof -- Let Case}
+Case: (\texttt{T.6}, \texttt{D.8})
+\[
+\cinfer[T.6]{let($x; e_1; e_2$): $\tau_2$}
+  {e_1: \tau_1
+   &
+   x : \tau_1 \vdash e_2: \tau_2
+  }
+\]
+\[
+\cinfer[D.8]{let($x$; $e_1$; $e_2$) $\stepto$ $[e_1 / x]e_2$}{e_1 \; \texttt{value}}
+\]
+
+Since $e_1: \tau_1$ and $x : \tau_1 \vdash e_2: \tau_2$,
+by \emph{substitution lemma}, we have $[e_1 / x]e_2 : \tau_2$.
+$\qed$
+
+We have completed the proof of preservation!
+\end{frame}
+
+
+\section{Type Safety}
+
+\begin{frame}{Type Safety}
+\begin{itemize}
+\item Preservation + Progress = Type Safety
+  \begin{itemize}
+  \item Progress theorem and proof presented in them paper.
+  \end{itemize}
+
+\pause
+\item Type safety ensure program behavior is well-defined
+throughout its execution.
+
+\pause
+\item Proving language properties are important
+(e.g. ruling out certain errors, publishing).
+
+\pause
+\item But proofs are long, error prone, and difficult
+to validate.
+
+\item Automated support for \emph{deriving proofs} and
+\emph{checking proofs} of language properties.
+	\begin{itemize}
+	\item Twelf, Coq, Isabelle, Agda, $\ldots$
+	\end{itemize}
+\end{itemize}
+\end{frame}
+
+
+\begin{frame}{Summary}
+\begin{itemize}
+\item Programming languages can be defined using formal
+mathematical specification.
+	\begin{itemize}
+	\item Which programs are allowed.
+	\item How a program executes.
+	\end{itemize}
+\item Formal specification enables proving language properties.
+\item Type system = formally defined language with types.
+\item Type safety theorems (e.g. preservation) establish
+relationship between compile-time analysis and run-time
+behavior.
+\end{itemize}
+\end{frame}
+\end{document}
