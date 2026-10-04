@@ -18,7 +18,7 @@ make clean      # remove auxiliary files
 make distclean  # also remove the PDF
 ```
 
-pdflatex runs twice so the frame counter (`\inserttotalframenumber` in the footer) and the navigation/TOC data are correct. Build outputs, including the PDF, are gitignored.
+pdflatex runs twice so the frame counter (`\inserttotalframenumber` in the footer) and the navigation/TOC data are correct. Build outputs, including the PDF, are gitignored. The PDF is published as a GitHub Release asset named `typetheory_slides.pdf` (the twelf_tutorial README links to `releases/latest/download/typetheory_slides.pdf`); the README's "Releasing" section has the steps.
 
 ## Structure
 
