@@ -151,6 +151,7 @@
 
 \begin{frame}{Example Expressions}
 \begin{center}
+\resizebox{\linewidth}{!}{%
 \begin{tabular}{l|l}
 \textit{Abstract} & \textit{Concrete} \\ \hline
 \code{+(num[5]; +(num[4]; num[3]))}   & \code{5 + 4 + 3} \\
@@ -161,8 +162,7 @@
 
 \code{let(hours; num[24];}    & \code{let hours be 24 in hours+33} \\
 \code{  +(hours; num[33]))}   & \\
-
-\end{tabular}
+\end{tabular}}
 \end{center}
 \end{frame}
 
@@ -198,7 +198,7 @@
 \[
 \cinfer[T.4]{$\Gamma \vdash$ +($e_1$; $e_2$): num}
   {\code{$\Gamma \vdash e_1$: num} & \code{$\Gamma \vdash e_2$: num}}
-\qquad
+\quad
 \cinfer[T.5]{$\Gamma \vdash$ \^{}($e_1$; $e_2$): str}
   {\code{$\Gamma \vdash e_1$: str} & \code{$\Gamma \vdash e_2$: str}}
 \]
@@ -214,8 +214,8 @@
 
 
 \begin{frame}{Example Type Derivation}
-\begin{scriptsize}
-\[
+\begin{center}
+\resizebox{\linewidth}{!}{\scriptsize $\displaystyle
 \ttinfer[T.6]{$\vdash$ let(hrs; num[24]; +(hrs; num[3])): num}
   {\ttinfer[T.1]{$\vdash$ num[24]: num}{ }
    &
@@ -225,14 +225,14 @@
       \ttinfer[T.1]{hrs:num $\vdash$ num[3]: num}{ }
      }
   }
-\]
-\end{scriptsize}
+$}
+\end{center}
 \end{frame}
 
 
 \begin{frame}{Example Type Check Failure}
-\begin{scriptsize}
-\[
+\begin{center}
+\resizebox{\linewidth}{!}{\scriptsize $\displaystyle
 \ttinfer{$\vdash$ let(hrs; num[24]; +(hrs; str[abc]))}
   {\ttinfer[T.1]{$\vdash$ num[24]: num}{ }
    &
@@ -242,8 +242,8 @@
       \ttinfer[T.1]{hrs:num $\vdash$ str[abc]: str}{ }
      }
   }
-\]
-\end{scriptsize}
+$}
+\end{center}
 \end{frame}
 
 
