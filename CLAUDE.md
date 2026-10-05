@@ -24,6 +24,8 @@ pdflatex runs twice so the frame counter (`\inserttotalframenumber` in the foote
 
 Spell check, configured as in typetheory_paper: `docker run --rm -v "$PWD":/w -w /w node:22-slim npx -y cspell@8 "**/*.tex"` must report 0 issues. Add legitimate new terms to `project-words.txt`.
 
+CI: `.github/workflows/build.yml` runs the Docker build, then fails if `typetheory_slides.log` has a warning or an overfull or underfull box, or if cspell reports an issue. Keep the build clean, or the push turns red; if a new message is genuinely expected, change the check in the workflow and the note here together.
+
 ## Structure
 
 - `typetheory_slides.tex`: the whole deck. Each `\section` wraps one or more `frame`s, and `\pause` builds content up step by step.
