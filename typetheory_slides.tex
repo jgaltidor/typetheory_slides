@@ -405,7 +405,7 @@ Rule \texttt{T.4} gives us:
 
 \begin{frame}{Preservation Proof -- Remaining Cases}
 \begin{itemize}
-\item Remaining cases in preservation proof apply similar reasoning.
+\item Remaining cases in the preservation proof apply similar reasoning.
 \item We show one more case involving a common lemma.
 \end{itemize}
 \end{frame}
@@ -437,18 +437,18 @@ Proof of this lemma by induction on the structure of $e$.
 \begin{frame}{Preservation Proof -- Let Case}
 Case: (\texttt{T.6}, \texttt{D.8})
 \[
-\cinfer[T.6]{let($x; e_1; e_2$): $\tau_2$}
+\cinfer[T.6]{let($x$; $e_1$; $e_2$): $\tau_2$}
   {e_1: \tau_1
    &
    x : \tau_1 \vdash e_2: \tau_2
   }
 \]
 \[
-\cinfer[D.8]{let($x$; $e_1$; $e_2$) $\stepto$ $[e_1 / x]e_2$}{e_1 \; \texttt{value}}
+\cinfer[D.8]{let($x$; $e_1$; $e_2$) $\stepto$ $[e_1 / x]e_2$}{e_1 \; \code{value}}
 \]
 
 Since $e_1: \tau_1$ and $x : \tau_1 \vdash e_2: \tau_2$,
-by \emph{substitution lemma}, we have $[e_1 / x]e_2 : \tau_2$.
+by the \emph{Substitution Lemma}, we have $[e_1 / x]e_2 : \tau_2$.
 $\qed$
 
 We have completed the proof of preservation!
@@ -496,7 +496,7 @@ mathematical specification.
 \item Formal specification enables proving language properties.
 \item Type system = formally defined language with types.
 \item Type safety theorems (e.g., preservation) establish
-relationship between compile-time analysis and run-time
+a relationship between compile-time analysis and run-time
 behavior.
 \end{itemize}
 \end{frame}
