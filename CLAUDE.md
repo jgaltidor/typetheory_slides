@@ -20,6 +20,8 @@ make distclean  # also remove the PDF
 
 pdflatex runs twice so the frame counter (`\inserttotalframenumber` in the footer) and the navigation/TOC data are correct. Build outputs, including the PDF, are gitignored. The PDF is published as a GitHub Release asset named `typetheory_slides.pdf` (the twelf_tutorial README links to `releases/latest/download/typetheory_slides.pdf`); the README's "Releasing" section has the steps.
 
+Spell check, configured as in typetheory_paper: `docker run --rm -v "$PWD":/w -w /w node:22-slim npx -y cspell@8 "**/*.tex"` must report 0 issues. Add legitimate new terms to `project-words.txt`.
+
 ## Structure
 
 - `typetheory_slides.tex`: the whole deck. Each `\section` wraps one or more `frame`s, and `\pause` builds content up step by step.
