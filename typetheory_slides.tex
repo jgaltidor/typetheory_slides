@@ -50,7 +50,7 @@
 
 \item Example Type System/Programming Language (PL).
   \begin{itemize}
-	\item Presenting $MiniLang$:
+	\item Presenting MiniLang:
 	A simple programming language of numbers and strings.
 	\item Syntax
 	\item Static Semantics (Type Checking)
@@ -59,14 +59,14 @@
   \end{itemize}
 \item Twelf Tutorial
 	\begin{itemize}
-	\item Mechanization of $MiniLang$
+	\item Mechanization of MiniLang
 	\end{itemize}
 \end{itemize}
 \end{frame}
 
 \section{Motivation}
 
-\begin{frame}{Create Language vs Create Library}
+\begin{frame}{Create Language vs. Create Library}
 \begin{itemize}
 \pause
 \item Library Pros:
@@ -84,7 +84,7 @@
   \item Errors difficult to \emph{detect and debug} w/o a compiler.
 		\begin{itemize}
 		\item Programs can enter undefined states \\
-		(e.g. segmentation fault from reading a non-existing field).
+		(e.g., segmentation fault from reading a nonexistent field).
 		\end{itemize}
 
 \pause
@@ -121,11 +121,11 @@
   \item Program is always in a well-defined state throughout
   execution (no segmentation fault).
   \item Can prove properties related to software requirements
-  (e.g. information flow).
+  (e.g., information flow).
   \end{itemize}
 
 \pause
-\item Compiler \emph{informs} programmers of errors at compile-time.
+\item Compiler \emph{informs} programmers of errors at compile time.
 
 \pause
 \item Best explained with an example: \emph{MiniLang}
@@ -181,8 +181,8 @@
 \end{itemize}
 
 \[
-\infer[Rule Label]{\underbrace{J}_{conclusion}}
-      {\overbrace{J_1 \quad J_2 \quad \ldots \quad J_n}^{premises}}
+\infer[Rule Label]{\underbrace{J}_{\text{conclusion}}}
+      {\overbrace{J_1 \quad J_2 \quad \ldots \quad J_n}^{\text{premises}}}
 \]
 
 \begin{itemize}
@@ -242,7 +242,7 @@ $}
 \ttinfer{$\vdash$ let(hrs; num[24]; +(hrs; str[abc]))}
   {\ttinfer[T.1]{$\vdash$ num[24]: num}{ }
    &
-   \ttinfer{hrs:num $\vdash$ +(hrs; str[abc]): $Fail$}
+   \ttinfer{hrs:num $\vdash$ +(hrs; str[abc]): $\mathit{Fail}$}
      {\ttinfer[T.3]{hrs:num $\vdash$ hrs: num}{ }
       &
       \ttinfer[T.1]{hrs:num $\vdash$ str[abc]: str}{ }
@@ -257,7 +257,7 @@ $}
 
 \begin{frame}{Dynamic (Operational) Semantics (Evaluation)}
 \begin{itemize}
-\item Defining how to ``execute'' expressions in $MiniLang$.
+\item Defining how to ``execute'' expressions in MiniLang.
 \item Specifically, defining a \emph{transition system}/relation
 $\stepto$ \\
 between expressions to evaluate them to \emph{values}.
@@ -477,16 +477,16 @@ throughout its execution.
 
 \pause
 \item Proving language properties is important
-(e.g. ruling out certain errors, publishing).
+(e.g., ruling out certain errors, publishing).
 
 \pause
-\item But proofs are long, error prone, and difficult
+\item But proofs are long, error-prone, and difficult
 to validate.
 
 \item Automated support for \emph{deriving proofs} and
 \emph{checking proofs} of language properties.
 	\begin{itemize}
-	\item Twelf, Coq, Isabelle, Agda, $\ldots$
+	\item Twelf, Rocq (formerly Coq), Isabelle, Agda, $\ldots$
 	\end{itemize}
 \end{itemize}
 \end{frame}
@@ -502,7 +502,7 @@ mathematical specification.
 	\end{itemize}
 \item Formal specification enables proving language properties.
 \item Type system = formally defined language with types.
-\item Type safety theorems (e.g. preservation) establish
+\item Type safety theorems (e.g., preservation) establish
 relationship between compile-time analysis and run-time
 behavior.
 \end{itemize}
