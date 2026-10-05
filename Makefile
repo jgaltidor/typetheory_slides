@@ -10,4 +10,4 @@ clean:
 	  $(MAINFILE).out $(MAINFILE).nav $(MAINFILE).snm $(MAINFILE).vrb
 
 distclean: clean
-	rm $(MAINFILE).pdf
+	rm -f $(MAINFILE).pdf

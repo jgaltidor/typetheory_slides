@@ -24,7 +24,7 @@ pdflatex runs twice so the frame counter (`\inserttotalframenumber` in the foote
 
 - `typetheory_slides.tex`: the whole deck. Each `\section` wraps one or more `frame`s, and `\pause` builds content up step by step.
 - `mymacros.tex`: shared macros pulled in with `\input`. Read it before you edit any slide content, because the slides depend on its custom definitions:
-  - `\infer` (from the `proof` package) is **redefined** so that its optional rule-name argument is set in `\scriptsize\texttt`. Related wrappers are `\myinfer`, `\cinfer`, `\ttinfer`, `\spcinfer`, and `\judge`.
+  - `\infer` (from the `proof` package) is **redefined** so that its optional rule-name argument is set in `\scriptsize\texttt`. Related wrappers are `\cinfer` (conclusion in `\code`) and `\ttinfer` (conclusion in `\texttt`).
   - `\code{...}` sets small typewriter text, and `\cemph` highlights in red. `\code` and the `\infer` rule labels wrap their text in `\text{...}` so they work inside math; keep size changes inside `\text` rather than using `\begin{small}` in math.
-  - Grammar and semantics notation: `\bnfdef`, `\bnfalt`, `\subst{e'}{x}{e}`, `\stepto`, `\stepsto`, `\trans`, `\transs`, `\subtype`.
+  - Grammar and semantics notation: `\bnfdef`, `\bnfalt`, `\stepto`.
 - `typetheory_slides.tex` also redefines `\emph` as bold italic.
