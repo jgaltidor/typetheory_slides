@@ -20,7 +20,7 @@ make distclean  # also remove the PDF
 
 Pinned toolchain: `docker build -t typetheory-slides-tex .` then `docker run --rm -v "$PWD":/workdir typetheory-slides-tex` (runs `make`). The `Dockerfile` pins the same TeX Live 2026 image, by digest, as the other repos; `.devcontainer/` uses it too, and its LTeX+ settings list the deck's prose macros. Release PDFs are built with this image. The deck builds with no LaTeX or font warnings and no overfull boxes, so any such message in `typetheory_slides.log` is new.
 
-pdflatex runs twice so the frame counter (`\inserttotalframenumber` in the footer) and the navigation/TOC data are correct. Build outputs, including the PDF, are gitignored. The PDF is published as a GitHub Release asset named `typetheory_slides.pdf` (the twelf_tutorial README links to `releases/latest/download/typetheory_slides.pdf`); the README's "Releasing" section has the steps.
+pdflatex runs twice so the frame counter (`\inserttotalframenumber` in the footer) and the navigation/TOC data are correct. Build outputs, including the PDF, are gitignored. The PDF is published as a GitHub Release asset named `typetheory_slides.pdf` (the twelf_tutorial README links to `releases/latest/download/typetheory_slides.pdf`); pushing an annotated `v*` tag makes the `release` job in `.github/workflows/build.yml` build the tag, run the checks, and create the release (title from the tag's first line, notes from the rest); see the README's "Releasing" section.
 
 Spell check, configured as in typetheory_paper: `docker run --rm -v "$PWD":/w -w /w node:22-slim npx -y cspell@8 "**/*.tex"` must report 0 issues. Add legitimate new terms to `project-words.txt`.
 
