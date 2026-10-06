@@ -2,7 +2,7 @@
 
 LaTeX (Beamer) source for a slide presentation by John Altidor, first given as a logic seminar lecture in 2013. It introduces type theory as it is used to specify programming languages, through *MiniLang*, a small language of numbers and strings: its syntax, static and dynamic semantics, and proofs of type safety.
 
-**Download the PDF:** [typetheory_slides.pdf](https://github.com/jgaltidor/typetheory_slides/releases/latest/download/typetheory_slides.pdf) (latest release; earlier versions are on the [Releases](https://github.com/jgaltidor/typetheory_slides/releases) page).
+**Read the PDF:** [typetheory_slides.pdf](https://jgaltidor.github.io/typetheory_slides/typetheory_slides.pdf) (latest release; [download](https://github.com/jgaltidor/typetheory_slides/releases/latest/download/typetheory_slides.pdf) it instead, or find earlier versions on the [Releases](https://github.com/jgaltidor/typetheory_slides/releases) page).
 
 The slides accompany two other repositories:
 
@@ -45,7 +45,7 @@ GitHub Actions (`.github/workflows/build.yml`) builds the PDF in the pinned imag
 
 ## Releasing
 
-The PDF is published as a GitHub Release asset, not committed (build outputs are gitignored). Pushing a version tag publishes it: GitHub Actions builds the tag in the pinned image, runs the same checks as every push, and creates the release with the PDF attached. The tag must be annotated; its first line becomes the release title and any further lines become the release notes:
+The PDF is published as a GitHub Release asset, not committed (build outputs are gitignored). Pushing a version tag publishes it: GitHub Actions builds the tag in the pinned image, runs the same checks as every push, and creates the release with the PDF attached. It then publishes that PDF to GitHub Pages at [`https://jgaltidor.github.io/typetheory_slides/typetheory_slides.pdf`](https://jgaltidor.github.io/typetheory_slides/typetheory_slides.pdf), because GitHub serves release assets as downloads, which some browsers (such as Safari on iPhone) save without displaying; to republish it without a new release, run the workflow by hand (`gh workflow run build.yml`). The tag must be annotated; its first line becomes the release title and any further lines become the release notes:
 
 ```sh
 git tag -a v1.2 -F - <<'EOF'
@@ -58,7 +58,7 @@ git push origin v1.2
 
 If a check fails, no release is created. Fix the problem on `master`, then move the tag to the fixed commit and push it again (`git tag -d v1.2`, `git push origin :refs/tags/v1.2`, and tag again).
 
-Keep the asset named `typetheory_slides.pdf`: the README above, the [typetheory_paper](https://github.com/jgaltidor/typetheory_paper) and [twelf_tutorial](https://github.com/jgaltidor/twelf_tutorial) READMEs, and [jgaltidor.github.io](https://jgaltidor.github.io) link to `releases/latest/download/typetheory_slides.pdf`, which always serves the newest release. The [typetheory_paper](https://github.com/jgaltidor/typetheory_paper) bibliography cites a specific release instead (`typetheory-slides` in `refs.bib`); update it when a release is worth citing.
+Keep the asset named `typetheory_slides.pdf`: the README above, the [typetheory_paper](https://github.com/jgaltidor/typetheory_paper) and [twelf_tutorial](https://github.com/jgaltidor/twelf_tutorial) READMEs, and [jgaltidor.github.io](https://jgaltidor.github.io) link to the GitHub Pages copy, which the `pages` job downloads from `releases/latest/download/typetheory_slides.pdf`; both always serve the newest release. The [typetheory_paper](https://github.com/jgaltidor/typetheory_paper) bibliography cites a specific release instead (`typetheory-slides` in `refs.bib`); update it when a release is worth citing.
 
 ## License
 

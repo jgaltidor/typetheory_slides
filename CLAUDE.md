@@ -20,12 +20,12 @@ make distclean  # also remove the PDF
 
 Pinned toolchain: `docker build -t typetheory-slides-tex .` then `docker run --rm -v "$PWD":/workdir typetheory-slides-tex` (runs `make`). The `Dockerfile` pins the same TeX Live 2026 image, by digest, as the other repos; `.devcontainer/` uses it too, and its LTeX+ settings list the deck's prose macros. Release PDFs are built with this image. The deck builds with no LaTeX or font warnings and no overfull boxes, so any such message in `typetheory_slides.log` is new.
 
-pdflatex runs twice so the frame counter (`\inserttotalframenumber` in the footer) and the navigation/TOC data are correct. Build outputs, including the PDF, are gitignored. The PDF is published as a GitHub Release asset named `typetheory_slides.pdf`; pushing an annotated `v*` tag makes the `release` job in `.github/workflows/build.yml` build the tag, run the checks, and create the release (title from the tag's first line, notes from the rest); see the README's "Releasing" section.
+pdflatex runs twice so the frame counter (`\inserttotalframenumber` in the footer) and the navigation/TOC data are correct. Build outputs, including the PDF, are gitignored. The PDF is published as a GitHub Release asset named `typetheory_slides.pdf`; pushing an annotated `v*` tag makes the `release` job in `.github/workflows/build.yml` build the tag, run the checks, and create the release (title from the tag's first line, notes from the rest); see the README's "Releasing" section. A `pages` job then copies that PDF to GitHub Pages (`https://jgaltidor.github.io/typetheory_slides/typetheory_slides.pdf`), since GitHub serves release assets as downloads that iPhone Safari won't display; `gh workflow run build.yml` republishes it without a release.
 
 After a release, check the references in the related repos (locally under `~/Documents/mywork/repos`):
 
 - Pinned to a version, so update by hand: `typetheory_paper/refs.bib` (`typetheory-slides`, a `releases/tag/vX.Y` URL) and the version noted in typetheory_paper's CLAUDE.md. The released paper PDF cites the new deck only after a new paper release.
-- Links to `releases/latest/download/typetheory_slides.pdf`, which follow the newest release on their own: this README, the typetheory_paper and twelf_tutorial READMEs, and `jgaltidor.github.io/index.html`. These break only if the asset is renamed.
+- Links that follow the newest release on their own: this README (`releases/latest/download/typetheory_slides.pdf` and the Pages URL), and the typetheory_paper and twelf_tutorial READMEs and `jgaltidor.github.io/index.html` (the Pages URL). These break only if the asset is renamed.
 
 Spell check, configured as in typetheory_paper: `docker run --rm -v "$PWD":/w -w /w node:22-slim npx -y cspell@8 "**/*.tex"` must report 0 issues. Add legitimate new terms to `project-words.txt`.
 
